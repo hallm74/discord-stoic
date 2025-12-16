@@ -1,0 +1,24 @@
+{
+  "name": "discord-stoic",
+  "version": "1.0.0",
+  "description": "Daily Stoic quotes with modern reflections posted to Discord",
+  "main": "scripts/daily-stoic.js",
+  "scripts": {
+    "start": "node scripts/daily-stoic.js",
+    "test": "node scripts/daily-stoic.js"
+  },
+  "keywords": [
+    "stoic",
+    "discord",
+    "openai",
+    "quotes"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.3.1"
+  }
+}

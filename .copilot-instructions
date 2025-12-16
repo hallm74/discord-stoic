@@ -1,0 +1,112 @@
+# Discord Stoic Bot - Copilot Instructions
+
+## Project Overview
+A minimal Node.js GitHub Actions workflow that:
+- Fetches daily Stoic quotes from https://stoic.tekloon.net/stoic-quote
+- Generates modern reflections using GitHub Models API (gpt-4o-mini)
+- Posts formatted messages to Discord via webhooks (no bot account needed)
+- Runs automatically once per day or on manual trigger
+- **Cost**: Completely free (GitHub Models + GitHub Actions free tier)
+
+## Tech Stack
+- **Runtime**: Node.js 18+ (native fetch, no external dependencies)
+- **AI**: GitHub Models API (`gpt-4o-mini`)
+- **Platform**: GitHub Actions (cron scheduled + manual dispatch)
+- **Delivery**: Discord webhooks (multiple channels supported)
+- **Config**: Environment variables (.env for local, secrets in GitHub)
+
+## Project Structure
+```
+discord-stoic/
+├── .github/workflows/daily-stoic.yml    # GitHub Actions workflow (8 AM UTC daily + manual)
+├── scripts/daily-stoic.js               # Main bot script (fetch → AI → Discord)
+├── package.json                         # No external dependencies (just dotenv for local dev)
+├── .env.example                         # Template for local testing
+├── .env                                 # (ignored) Local credentials
+├── README.md                            # Setup and usage docs
+└── .copilot-instructions                # This file
+```
+
+## Key Files & Their Purpose
+
+### .github/workflows/daily-stoic.yml
+- Triggers: Daily cron (0 8 * * *) + manual workflow_dispatch
+- Steps: Checkout → Setup Node 18 → npm install → run script
+- Env vars: GITHUB_TOKEN (auto-provided), DISCORD_WEBHOOKS (secret)
+
+### scripts/daily-stoic.js
+Main execution flow:
+1. `fetchStoicQuote()` - GET from stoic.tekloon.net, parse data.data.{quote, author}
+2. `generateReflection()` - POST to GitHub Models API with prompt, get ~120-word reflection
+3. `formatDiscordMessage()` - Create message object with quote + reflection
+4. `postToDiscord()` - POST to each webhook URL
+5. Error handling + console logging for GitHub Actions visibility
+
+**Important**: API returns nested data structure: `data.data.quote` and `data.data.author`
+
+### .env (local testing)
+```
+GITHUB_TOKEN=ghp_xxxxx (personal access token, classic, no scopes)
+DISCORD_WEBHOOKS=https://discord.com/api/webhooks/...,https://...
+```
+
+## Development Workflow
+
+### Local Testing
+```bash
+cp .env.example .env
+# Edit .env with your credentials
+npm install
+npm start
+```
+
+### Testing Changes
+- Edit [scripts/daily-stoic.js](scripts/daily-stoic.js) for logic/prompts
+- Run `npm start` to test locally before pushing
+- Watch GitHub Actions logs for deployment issues
+
+### Common Modifications
+- **Change reflection style**: Edit the prompt in `generateReflection()`
+- **Adjust reflection length**: Edit `MAX_REFLECTION_WORDS` constant
+- **Change run time**: Edit cron in `.github/workflows/daily-stoic.yml` (cron format: minute hour day month weekday)
+- **Add/remove webhooks**: Comma-separate webhook URLs in DISCORD_WEBHOOKS
+
+## Important Details
+
+### API Quirks
+- **Stoic quote API**: Returns `{data: {quote, author}}` not `{quote, author}`
+- **GitHub Models API**: Uses Bearer token auth, same as OpenAI-compatible endpoints
+- **Discord webhooks**: POST JSON with `content` field
+
+### Environment Setup
+- GitHub Actions: GITHUB_TOKEN is auto-provided (always available)
+- Local: GITHUB_TOKEN must be a classic personal access token with NO scopes
+- Discord webhooks: Multiple URLs are comma-separated
+
+### Error Handling
+- Script fails gracefully with `process.exit(1)` on any error
+- Console logs are visible in GitHub Actions output for debugging
+- Each step (fetch, AI, Discord post) has try-catch with descriptive errors
+
+## Future Enhancement Ideas
+- Rate-limit handling for GitHub Models API
+- Quote/reflection caching or database
+- Multiple reflection styles (toggle via env var)
+- Scheduled message delay before posting
+- Statistics tracking (quotes posted, tokens used)
+- Slack/Teams support (same webhook pattern)
+- Custom quote source support
+
+## Testing Checklist
+- [ ] Local .env file configured correctly
+- [ ] `npm start` runs without errors
+- [ ] Quote is fetched and logged correctly
+- [ ] Reflection is generated (check token count)
+- [ ] Discord message is posted successfully
+- [ ] GitHub Actions workflow runs on schedule
+- [ ] Manual workflow_dispatch trigger works
+
+## Resources
+- GitHub Models: https://github.com/marketplace/models
+- Discord Webhooks: https://discord.com/developers/docs/resources/webhook
+- Stoic Quote API: https://stoic.tekloon.net/stoic-quote
