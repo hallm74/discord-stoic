@@ -58,9 +58,9 @@ async function fetchStoicQuote() {
 async function generateReflection(quote, author) {
   console.log('Generating modern reflection...');
   
-  const apiKey = process.env.GITHUB_TOKEN;
+  const apiKey = process.env.MODELS_TOKEN;
   if (!apiKey) {
-    throw new Error('GITHUB_TOKEN environment variable is not set');
+    throw new Error('MODELS_TOKEN environment variable is not set');
   }
   
   const prompt = `You are a modern Stoic philosopher. Write a brief, practical reflection on this Stoic quote:

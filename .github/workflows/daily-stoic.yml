@@ -26,6 +26,6 @@ jobs:
       
       - name: Run daily Stoic script
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MODELS_TOKEN: ${{ secrets.MODELS_TOKEN }}
           DISCORD_WEBHOOKS: ${{ secrets.DISCORD_WEBHOOKS }}
         run: node scripts/daily-stoic.js

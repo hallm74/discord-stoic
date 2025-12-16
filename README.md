@@ -17,10 +17,8 @@ A minimal Node.js project that fetches daily Stoic quotes, generates modern refl
 
 Add these secrets to your GitHub repository (Settings → Secrets and variables → Actions):
 
-- **GITHUB_TOKEN**: Automatically available in GitHub Actions (no setup needed!)
+- **MODELS_TOKEN**: Your GitHub personal access token (classic, no scopes)
 - **DISCORD_WEBHOOKS**: Your Discord webhook URL(s)
-
-> **Note**: `GITHUB_TOKEN` is automatically provided by GitHub Actions with access to GitHub Models API - you don't need to create or configure it!
 
 #### Getting Discord Webhooks
 
@@ -67,7 +65,7 @@ schedule:
 
 3. **Edit `.env`** with your actual credentials:
    ```bash
-   GITHUB_TOKEN=github_pat_your-actual-token-here
+   MODELS_TOKEN=ghp_your-actual-token-here
    DISCORD_WEBHOOKS=https://discord.com/api/webhooks/your-webhook-url
    ```
 
@@ -81,7 +79,7 @@ The script will automatically load your `.env` file when running locally.
 
 **Alternative (without .env file):**
 ```bash
-export GITHUB_TOKEN="github_pat_your-token-here"
+export MODELS_TOKEN="ghp_your-token-here"
 export DISCORD_WEBHOOKS="https://discord.com/api/webhooks/..."
 npm start
 ```
