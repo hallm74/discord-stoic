@@ -1,9 +1,9 @@
 name: Daily Stoic
 
 on:
-  # Run daily at 8:00 AM UTC
+  # Run daily at 7:00 AM Central (CST=13:00 UTC, CDT=12:00 UTC)
   schedule:
-    - cron: '0 8 * * *'
+    - cron: '0 13 * * *'
   
   # Allow manual trigger
   workflow_dispatch:
